@@ -96,5 +96,6 @@
 .icarus-terminal-table-index:before { content: "\ea4d"; }
 .icarus-terminal-table-inspector:before { content: "\ea4e"; }
 .icarus-terminal-table-rows:before { content: "\ea4f"; }
+.icarus-terminal-target:before { content: "\ea4f"; }
 .icarus-terminal-warning:before { content: "\ea50"; }
 .icarus-terminal-wrench:before { content: "\ea51"; }

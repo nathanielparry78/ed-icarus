@@ -1,0 +1,15 @@
+{
+  "workbench.colorCustomizations": {
+    "editor.background": "#151419",
+    "activityBar.background": "#223212",
+    "titleBar.activeBackground": "#304619",
+    "titleBar.activeForeground": "#F9FCF6"
+  },
+  "search.exclude": {
+    "**/.git": true,
+    "**/node_modules": true,
+    "**/bower_components": true,
+    "**/tmp": true,
+    "**/resources/data": true
+  },
+}

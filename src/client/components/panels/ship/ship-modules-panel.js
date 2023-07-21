@@ -1,5 +1,6 @@
+import { useEffect, useState } from 'react'
 import { UNKNOWN_VALUE } from '../../../../shared/consts'
-import ShipModules from 'components/panels/ship/ship-status/ship-modules'
+import ShipModulesOld from 'components/panels/ship/ship-status/ship-modules-old'
 
 export default function ShipStatusPanel ({ ship, selectedModule, setSelectedModule, cmdrStatus, toggleSwitches, toggleSwitch }) {
   if (!ship) return null
@@ -15,6 +16,34 @@ export default function ShipStatusPanel ({ ship, selectedModule, setSelectedModu
     )
   }
 
+  const [hardpoints, setHardpoints] = useState([]);
+  const [optInternals, setOptInternals] = useState([]);
+  const [coreInternals, setCoreInternals] = useState([]);
+  const [utilityMounts, setUtilityMounts] = useState([]);
+
+  useEffect(() => {
+    const mods = Object.values(ship.modules);
+    const hardpoints = mods.filter(module =>
+      ['huge', 'large', 'medium', 'small'].includes(module?.size))
+
+    const optional = mods.filter(({internal, core, slot}) => {
+      if (!internal || core || slot === 'CodexScanner') return false
+      return true
+    })
+
+    const core = mods.filter(module => {
+      if (!module.core && !ship.armour.includes(module.name)) return false
+      return true
+    })
+
+    const utils = mods.filter(module => ['tiny'].includes(module?.size))
+
+    setHardpoints(hardpoints)
+    setOptInternals(optional)
+    setCoreInternals(core)
+    setUtilityMounts(utils)
+  }, [ship])
+
   return (
     <>
       <div className={`ship-panel__modules scrollable ${selectedModule ? 'ship-panel__modules--module-inspector' : ''}`}>
@@ -22,49 +51,27 @@ export default function ShipStatusPanel ({ ship, selectedModule, setSelectedModu
         <h3 className='text-primary'>
           Modules &amp; Engineering Upgrades
         </h3>
-        <ShipModules
+        <ShipModulesOld
           name='Hardpoints'
-          modules={
-              Object.values(ship.modules)
-                .filter(module => ['huge', 'large', 'medium', 'small']
-                  .includes(module?.size))
-            }
+          modules={hardpoints}
           selectedModule={selectedModule}
           setSelectedModule={setSelectedModule}
         />
-        <ShipModules
-          name='Optional Internals'
-          modules={
-            Object.values(ship.modules)
-              .filter(module => {
-                if (!module.internal) return false
-                if (module.core) return false
-                if (module.slot === 'CodexScanner') return false // special case
-                return true
-              })
-            }
-          selectedModule={selectedModule}
-          setSelectedModule={setSelectedModule}
-        />
-        <ShipModules
+        <ShipModulesOld
           name='Core Internals'
-          modules={
-              Object.values(ship.modules)
-                .filter(module => {
-                  if (!module.core && !ship.armour.includes(module.name)) return false
-                  return true
-                })
-            }
+          modules={coreInternals}
           selectedModule={selectedModule}
           setSelectedModule={setSelectedModule}
         />
-        <ShipModules
+        <ShipModulesOld
+          name='Optional Internals'
+          modules={optInternals}
+          selectedModule={selectedModule}
+          setSelectedModule={setSelectedModule}
+        />
+        <ShipModulesOld
           name='Utility Mounts'
-          modules={
-            Object.values(ship.modules)
-              .filter(module => ['tiny']
-                .includes(module?.size))
-          }
+          modules={utilityMounts}
           selectedModule={selectedModule}
           setSelectedModule={setSelectedModule}
         />

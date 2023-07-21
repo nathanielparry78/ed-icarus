@@ -1,4 +1,5 @@
-import Document, { Html, Head, Main, NextScript } from 'next/document'
+import Document, { Html, Head, Main, NextScript } from 'next/document';
+import { ServerStyleSheet } from 'styled-components';
 
 // Disable onContextMenu, except in development
 const onContextMenu = process.env.NODE_ENV === 'development'
@@ -7,8 +8,24 @@ const onContextMenu = process.env.NODE_ENV === 'development'
 
 class MyDocument extends Document {
   static async getInitialProps (ctx) {
-    const initialProps = await Document.getInitialProps(ctx)
-    return { ...initialProps }
+    const sheet = new ServerStyleSheet();
+    const originalRenderPage = ctx.renderPage
+
+    try {
+      ctx.renderPage = () =>
+        originalRenderPage({
+          enhanceApp: (App) => (props) =>
+            sheet.collectStyles(<App {...props} />),
+        })
+
+      const initialProps = await Document.getInitialProps(ctx)
+      return {
+        ...initialProps,
+        styles: [initialProps.styles, sheet.getStyleElement()],
+      }
+    } finally {
+      sheet.seal()
+    }
   }
 
   render () {
@@ -139,20 +156,20 @@ class MyDocument extends Document {
       const isFirefox = navigator.userAgent.toLowerCase().indexOf('firefox') > -1
       const isIOSChrome = window.navigator.userAgent.match('CriOS')
       const isIOSFirefox = window.navigator.userAgent.match('FxiOS')
-      const isSafari = navigator.vendor.match(/apple/i) 
+      const isSafari = navigator.vendor.match(/apple/i)
         && !isIOSChrome && !isIOSFirefox
         && !navigator.userAgent.match(/Opera|OPT\\//)
 
       // Google Chrome supports filters on SVG textures in this way but not all
       // imitation Chrome browsers do and some look terrible as a result because
       // of how the fail at rendering.
-      // 
+      //
       // Firefox supports this feature too, though doesn't support focus events
       // on the SVGs so the map view isn't actually interactive on Firefox.
       //
       // This check is all so the map doesn't look bad on cheap tablets like the
       // Amazon Fire, which Amazon recently forceably purged side loaded Google
-      // Chrome from and replaced it with less capeable version of Amazon's 
+      // Chrome from and replaced it with less capeable version of Amazon's
       // Silk browser which uses Google Inc. as the vendor name but isn't
       // actually from Google and it does not have feature parity with Chrome.
       let ENABLE_PLANET_TEXTURES = false
@@ -161,7 +178,7 @@ class MyDocument extends Document {
       // doesn't support filters on SVG elements (textured or otherwise), so
       // they are not enabled on Safari for now (unless/until Apple address the
       // limitation).
-      if (isIEedge || (isFirefox && !isIOSFirefox)) { 
+      if (isIEedge || (isFirefox && !isIOSFirefox)) {
         ENABLE_PLANET_TEXTURES = true
       } else if (
         // Check is Google Chrome (and not impostor)
@@ -203,7 +220,7 @@ class MyDocument extends Document {
             .system-map__system-object[data-system-object-type="Star"] .system-map__planet-surface {
               fill: url(#svg-pattern__star-surface) !important;
             }
-            
+
             .system-map__system-object[data-system-object-type="Star"][data-system-object-sub-type*="Brown dwarf" i] .system-map__planet-surface {
               fill: url(#svg-pattern__planet-surface--brown-dwarf) !important;
             }

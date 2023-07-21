@@ -38,6 +38,7 @@ const Inventory = require('./event-handlers/inventory')
 const CmdrStatus = require('./event-handlers/cmdr-status')
 const NavRoute = require('./event-handlers/nav-route')
 const TextToSpeech = require('./event-handlers/text-to-speech')
+const Target = require('./event-handlers/target')
 
 class EventHandlers {
   constructor ({ eliteLog, eliteJson }) {
@@ -55,6 +56,8 @@ class EventHandlers {
     this.blueprints = new Blueprints({ engineers: this.engineers, materials: this.materials, shipStatus: this.shipStatus })
     this.navRoute = new NavRoute({ eliteLog, eliteJson, system: this.system })
     this.textToSpeech = new TextToSpeech({ eliteLog, eliteJson, cmdrStatus: this.cmdrStatus, shipStatus: this.shipStatus })
+
+    this.target = new Target({ eliteLog, eliteJson})
 
     return this
   }

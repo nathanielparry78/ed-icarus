@@ -11,6 +11,11 @@ function ShipPanelNavItems (activePanel) {
       url: '/ship/modules'
     },
     {
+      name: 'Systems',
+      icon: 'table-rows',
+      url: '/ship/systems'
+    },
+    {
       name: 'Cargo',
       icon: 'cargo',
       url: '/ship/cargo'
@@ -104,6 +109,25 @@ function EngineeringPanelNavItems (activePanel) {
   return navigationItems
 }
 
+function LogNavItems (activePanel) {
+  const navigationItems = [
+    {
+      name: 'Log',
+      icon: 'table-inspector',
+      url: '/log/log'
+    },
+    {
+      name: 'Missions',
+      icon: 'location-filled',
+      url: '/log/missions'
+    }
+  ]
+  navigationItems.forEach(item => {
+    if (item.name.toLowerCase() === activePanel.toLowerCase()) item.active = true
+  })
+  return navigationItems
+}
+
 function SettingsNavItems (activePanel) {
   const navigationItems = [
     {
@@ -121,9 +145,11 @@ function SettingsNavItems (activePanel) {
   return navigationItems
 }
 
+
 module.exports = {
   ShipPanelNavItems,
   NavPanelNavItems,
   EngineeringPanelNavItems,
+  LogNavItems,
   SettingsNavItems
 }

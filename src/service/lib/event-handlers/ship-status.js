@@ -22,6 +22,8 @@ class ShipStatus {
       this.eliteJson.json()
     ])
 
+    console.log(this.eliteLog)
+
     // The Loadout event is written on load, after switching ships and after
     // using Outfitting. This logic used to use ModulesInfo.json but it is not
     // updated as often and I haven't found a good use for ModulesInfo.json yet.

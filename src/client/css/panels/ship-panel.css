@@ -253,7 +253,6 @@
 }
 
 .ship-panel__module-section {
-  width: 33%;
   float: left;
   pointer-events: none;
   font-size: var(--base-font-size) !important;
@@ -262,8 +261,15 @@
   position: relative;
 }
 
+.ship-panel__module-section .text-info {
+  margin-bottom: .25rem;
+}
 .ship-panel__module-section .text-link {
   pointer-events: all !important;
+}
+
+.ship-panel__module-section .text-primary {
+  margin-top: 1rem;
 }
 
 @media only screen and (orientation: portrait) {
@@ -375,7 +381,7 @@ table.ship-panel__lights td {
     line-height: 1rem;
     font-size: 1rem;
     text-overflow: ellipsis;
-  } 
+  }
 }
 
 @media only screen and (max-width: 599px) {

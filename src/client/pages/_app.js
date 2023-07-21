@@ -4,6 +4,8 @@ import App from 'next/app'
 import { loadColorSettings, saveColorSettings } from 'components/settings'
 import '../public/fonts/icarus-terminal/icarus-terminal.css'
 import '../css/main.css'
+import { ThemeProvider, DefaultTheme } from 'styled-components'
+import GlobalStyle from 'components/globalstyles'
 
 export default class MyApp extends App {
   constructor (props) {
@@ -39,6 +41,7 @@ export default class MyApp extends App {
     const { Component, pageProps } = this.props
     return (
       <SocketProvider>
+        <GlobalStyle />
         <div id='notifications' style={{ transition: '1s all ease-in-out', position: 'fixed', zIndex: 9999 }}>
           <Toaster
             position='bottom-right'
