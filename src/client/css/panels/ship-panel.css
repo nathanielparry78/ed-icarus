@@ -90,6 +90,33 @@
   }
 }
 
+.ship-panel__status {
+  position: absolute;
+  /* To avoid clipping text-shadow to left of title text */
+  top: 0;
+  bottom: 0;
+  height: auto;
+  padding-right: .5rem;
+  right: 0;
+  left: 4.5rem;
+}
+
+
+.ship-panel__status:before {
+  content: " ";
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  z-index: -1;
+  opacity: .02;
+  content: ' ';
+  background-size: 5rem 5rem;
+  background-image: url(/images/grid.svg);
+}
+
 .ship-panel__modules {
   position: absolute;
   /* To avoid clipping text-shadow to left of title text */
@@ -363,6 +390,7 @@ table.ship-panel__lights td {
   font-size: 1.1rem;
   line-height: 1.25rem;
   text-align: left;
+  hyphens: none;
 }
 
 @media only screen and (max-width: 1023px) {
@@ -377,16 +405,16 @@ table.ship-panel__lights td {
     margin: auto;
     width: auto;
     padding: 0;
-    text-align: center;
     line-height: 1rem;
-    font-size: 1rem;
+    text-align: center;
     text-overflow: ellipsis;
-  }
+    hyphens: auto; /* not sure what this does. */
+  } 
 }
 
 @media only screen and (max-width: 599px) {
   .ship-panel__light-text {
-    font-size: .7rem;
+    xfont-size: .7rem;
   }
 }
 
@@ -427,7 +455,7 @@ table.ship-panel__lights td {
   .ship-panel__light--danger,
   .ship-panel__light--danger::before,
   .ship-panel__light--danger::after {
-    border-radius: .25rem !important;
+    border-radius: .5rem !important;
   }
 }
 
@@ -527,7 +555,9 @@ table.ship-panel__lights td {
 }
 
 .ship-panel__navigation-instrumentation.--active .dial-border {
-  animation: ship-panel__navigation-instrumentation-animation 3s ease-in-out infinite;
+  xanimation: ship-panel__navigation-instrumentation-animation 3s ease-in-out infinite;
+  /* "glowing" animation disabled here as browser rendering bug can cause compass heading icon to "jiggle" */
+  box-shadow: 0 0 1.25rem 0 rgba(255,255,255,.5);
 }
 
 @keyframes ship-panel__navigation-instrumentation-animation {
@@ -541,22 +571,18 @@ table.ship-panel__lights td {
 }
 
 .ship-panel__navigation-instrumentation .dial-background {
-  opacity: 0;
-  transition: backdrop-filter .5s;
-  animation: ship-panel__navigation-instrumentation-dial-background-animation .5s ease-in forwards;
-  animation-delay: .5s;
-}
-
-@keyframes ship-panel__navigation-instrumentation-dial-background-animation {
-  0% {
-    opacity: 0;
-    backdrop-filter: blur(0) opacity(0);
-  }
-  100% {
-    opacity: 1;
-    backdrop-filter: blur(.15rem) opacity(1);
-    background: radial-gradient(var(--color-primary-dark) 1%, transparent 90%);
-  }
+  background: radial-gradient(var(--color-primary-dark) 1%, transparent 90%);
+  position: relative;
+  top: 0;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+  height: 100%;
+  min-height: 12rem;
+  min-width: 12rem;
+  border-radius: 100rem;
 }
 
 .ship-panel__navigation-instrumentation .rings {
@@ -575,8 +601,11 @@ table.ship-panel__lights td {
   transform: rotateX(250deg);
 }
 
-.ship-panel__navigation-instrumentation.--active .ring {
+.ship-panel__navigation-instrumentation.--on-board .ring {
   animation: ship-panel__navigation-instrumentation-rings-animation 3s ease-in-out infinite;
+}
+
+.ship-panel__navigation-instrumentation.--active .ring {
   box-shadow: 0 0 3rem 0 rgba(255,255,255,.5);
 }
 

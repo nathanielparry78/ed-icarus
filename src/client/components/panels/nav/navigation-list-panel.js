@@ -1,7 +1,7 @@
 import CopyOnClick from 'components/copy-on-click'
 import { SPACE_STATIONS, SURFACE_PORTS, PLANETARY_BASES, MEGASHIPS } from '../../../../shared/consts'
 
-export default function NavigationInspectorPanel ({ system, systemObject, setSystemObject, showHelp }) {
+export default function NavigationListPanel ({ system, systemObject, setSystemObject, showHelp }) {
   if (!system) return null
 
   // Check if any bodies are visible on map (i.e. any stars *or* any "additional objects")
@@ -112,6 +112,7 @@ function NavigationTableRow ({ stars, systemObject, depth = 0, setSystemObject }
   }
 
   const isLandable = systemObject.isLandable || SPACE_STATIONS.concat(MEGASHIPS).includes(systemObject.type) || PLANETARY_BASES.includes(systemObject.type)
+  const isAtmospheric = systemObject.atmosphereComposition && !systemObject?.subType?.toLowerCase()?.includes('gas giant')
 
   // TODO Move to icon class
   let iconClass = 'icon system-object-icon icarus-terminal-'
@@ -135,7 +136,19 @@ function NavigationTableRow ({ stars, systemObject, depth = 0, setSystemObject }
       iconClass += 'orbis-starport'
       break
     case 'planet':
-      iconClass += 'planet'
+      if (isLandable) {
+        if (isAtmospheric) {
+          iconClass += 'planet-atmosphere-landable'
+        } else {
+          iconClass += 'planet-landable'
+        }
+      } else {
+        if (isAtmospheric) {
+          iconClass += 'planet-atmosphere'
+        } else {
+          iconClass += 'planet'
+        }
+      }
       break
     case 'mega ship':
       iconClass += 'megaship'
@@ -159,24 +172,32 @@ function NavigationTableRow ({ stars, systemObject, depth = 0, setSystemObject }
           <i className={iconClass} />
           {systemObject.label
             ? <>
-              <span className='visible-medium'>{systemObject.label}</span>
-              <span className='hidden-medium'>{systemObject.name}</span>
+                <span className='visible-medium'>{systemObject.label}</span>
+                <span className='hidden-medium'>{systemObject.name}</span>
               </>
             : systemObject.name}
           <span className={systemObject.isLandable ? 'text-secondary' : ''}>
-            {systemObject.isLandable === true && <i title='Landable' className='float-right icon icarus-terminal-planet-lander' />}
             {(systemObject.atmosphereComposition && !systemObject?.subType?.toLowerCase()?.includes('gas giant')) && <i className='float-right icon icarus-terminal-planet-atmosphere' />}
             {systemObject.volcanismType && systemObject.volcanismType !== 'No volcanism' && <i className='float-right icon icarus-terminal-planet-volcanic' />}
             {systemObject.terraformingState && systemObject.terraformingState !== 'Not terraformable' && systemObject.terraformingState !== 'Terraformed' && <i className='float-right icon icarus-terminal-planet-terraformable' />}
             {systemObject?.subType?.toLowerCase() === 'earth-like world' && <i className='float-right icon icarus-terminal-planet-earthlike' />}
             {systemObject?.subType?.toLowerCase() === 'ammonia world' && <i className='float-right icon icarus-terminal-planet-ammonia-world' />}
             {(systemObject?.subType?.toLowerCase()?.includes('water world') || systemObject?.subType?.toLowerCase()?.includes('water giant')) && <i className='float-right icon icarus-terminal-planet-water-world' />}
-            {systemObject?.subType?.toLowerCase() === 'high metal content world' && <i className='float-right icon icarus-terminal-planet-high-metal-content' />}
+            {(systemObject?.subType?.toLowerCase() === 'high metal content world' || systemObject?.subType?.toLowerCase() === 'metal rich') && <i className='float-right icon icarus-terminal-planet-high-metal-content' />}
             {systemObject?.subType?.toLowerCase()?.includes('gas giant') && <i className='float-right icon icarus-terminal-planet-gas-giant' />}
             {systemObject?.subType?.toLowerCase()?.includes('water-based life') && <i className='float-right icon icarus-terminal-planet-water-based-life' />}
             {systemObject?.subType?.toLowerCase()?.includes('ammonia-based life') && <i className='float-right icon icarus-terminal-planet-ammonia-based-life' />}
             {systemObject?.subType?.toLowerCase()?.includes('with life') && <i className='float-right icon icarus-terminal-planet-life' />}
+            {systemObject?.signals?.biological > 0 && <i className='float-right icon icarus-terminal-plant' />}
             {systemObject.rings && <i className='float-right icon icarus-terminal-planet-ringed' />}
+            {(systemObject?.subType?.toLowerCase() === 'earth-like world'
+              || systemObject?.subType?.toLowerCase() === 'water world'
+              || systemObject?.subType?.toLowerCase() === 'ammonia world'
+              || (systemObject.terraformingState && systemObject.terraformingState !== 'Not terraformable' && systemObject.terraformingState !== 'Terraformed')
+              || systemObject?.subType?.toLowerCase()?.includes('class ii gas giant')
+              || systemObject?.subType?.toLowerCase() === 'metal rich'
+            )
+              && <i className='float-right text-success icon icarus-terminal-credits' />}
           </span>
         </div>
       </td>

@@ -119,7 +119,7 @@ export default function Header ({ connected, active }) {
       <div style={{ position: 'absolute', top: '1rem', right: '.5rem' }}>
         <p
           className='text-primary text-center text-uppercase'
-          style={{ display: 'inline-block', padding: 0, margin: 0, lineHeight: '1rem', minWidth: '7rem' }}
+          style={{ display: 'inline-block', padding: 0, margin: 0, lineHeight: '1rem', minWidth: '7.5rem' }}
         >
            <span style={{position: 'relative', top: '.3rem', fontSize: '2.4rem', paddingTop: '.25rem'}}>
            {dateTime.time}
@@ -154,12 +154,13 @@ export default function Header ({ connected, active }) {
         </button>
       </div>
       <hr />
-
-          {/* account for landscape mode */}
-      <div className='button-group' >
+        {/* account for landscape mode */}
+        {/* check how `primaryNavigation` does */}
+      <div id='primaryNavigation' className='button-group'>
         {NAV_BUTTONS.filter(button => button).map(button =>
           <button
             key={button.name}
+            data-primary-navigation={i+1}
             tabIndex='1'
             disabled={button.path === currentPath}
             className={button.path === currentPath ? 'button--active' : ''}

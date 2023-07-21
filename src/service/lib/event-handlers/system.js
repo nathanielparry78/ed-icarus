@@ -3,8 +3,6 @@ const SystemMap = require('../system-map')
 const { UNKNOWN_VALUE } = require('../../../shared/consts')
 const distance = require('../../../shared/distance')
 
-const systemCache = {}
-
 class System {
   constructor ({ eliteLog }) {
     this.eliteLog = eliteLog
@@ -90,7 +88,7 @@ class System {
     // Check for entry in cache in case we have it already
     // Note: System names are unique (they can change, but will still be unique)
     // so is okay to use them as a key.
-    if (!systemCache[systemName.toLowerCase()] || useCache === false) {
+    if (!global.CACHE.SYSTEMS[systemName.toLowerCase()] || useCache === false) {
       // Get system from EDSM
       const system = await EDSM.system(systemName)
 
@@ -99,17 +97,99 @@ class System {
       // overwriting data from EDSM with with more recent local where there are
       // conflicts.
 
+      // Merge in local scan data with information about the body
+      if (system?.bodies) {
+        for (const body of system.bodies) {
+          body.signals = {
+            geological: 0,
+            biological: 0,
+            human: 0
+          }
+          
+          // Merge in body signal scan data
+          const FSSBodySignals = await this.eliteLog._query({ event: 'FSSBodySignals', BodyName: body.name }, 1)
+          if (FSSBodySignals[0]?.Signals) {
+            ;(FSSBodySignals[0]?.Signals).map(signal => {
+              if (signal?.Type === '$SAA_SignalType_Geological;') {
+                body.signals.geological = signal?.Count ?? 0
+              }
+              if (signal?.Type === '$SAA_SignalType_Biological;') {
+                body.signals.biological = signal?.Count ?? 0
+              }
+              if (signal?.Type === '$SAA_SignalType_Human;') {
+                body.signals.human = signal?.Count ?? 0
+              }
+            })
+          }
+
+          // Merge in surface scan data
+          const SAASignalsFound = await this.eliteLog._query({ event: 'SAASignalsFound', BodyName: body.name }, 1)
+          if (SAASignalsFound[0]?.Signals) {
+            ;(SAASignalsFound[0]?.Signals).map(signal => {
+              if (signal?.Type === '$SAA_SignalType_Geological;') {
+                body.signals.geological = signal?.Count ?? 0
+              }
+              if (signal?.Type === '$SAA_SignalType_Biological;') {
+                body.signals.biological = signal?.Count ?? 0
+              }
+              if (signal?.Type === '$SAA_SignalType_Human;') {
+                body.signals.human = signal?.Count ?? 0
+              }
+            })
+          }
+
+          // If we have data from a surface scan about the plants, merge it
+          if (body.signals.biological > 0 && SAASignalsFound[0]?.Genuses) {
+            body.biologicalGenuses = []
+            ;(SAASignalsFound[0]?.Genuses).map(biologicalSamples => {
+              body.biologicalGenuses.push(biologicalSamples.Genus_Localised)
+            })
+          }
+
+          // Only log discovered / mapped if in an unhabited system
+          // FIXME Suspect this logic isn't entirely correct
+          const inhabitedSystem = (system?.population > 0 || system?.stations?.length > 0 || system?.ports?.length > 0 || system?.megaships?.length > 0 || system?.settlements?.length > 0)
+          if (!inhabitedSystem) {
+            const Scan = await this.eliteLog._query({ event: 'Scan', BodyName: body.name }, 1)
+            body.discovered = Scan[0]?.WasDiscovered ?? false
+            body.mapped = Scan[0]?.WasMapped ?? false
+
+            // If there is an SAAScanComplete entry for the body, it has been scanned
+            // (even if the Scan entry says it has not, because it's old data)
+            const SAAScanComplete = await this.eliteLog._query({ event: 'SAAScanComplete', BodyName: body.name }, 1)
+            if (SAAScanComplete[0]?.BodyName) body.mapped = true
+          }
+        }
+      }
+
+
       // Generate map data from the system data
       const systemMap = new SystemMap(system)
 
       // Create/Update cache entry with merged system and system map data
-      systemCache[systemName.toLowerCase()] = {
+      global.CACHE.SYSTEMS[systemName.toLowerCase()] = {
         ...system,
         ...systemMap
       }
     }
 
-    const cacheResponse = systemCache[systemName.toLowerCase()] // Get entry from cache
+    const cacheResponse = global.CACHE.SYSTEMS[systemName.toLowerCase()] // Get entry from cache
+
+    // Determine how many bodies we actaully know of in the current system, and
+    // how many we think there are based on FSS Discovery Scan
+    let numberOfBodiesFound = cacheResponse?.bodies?.length ?? 0
+    let numberOfBodiesInSystem = numberOfBodiesFound // We start with this value (until we know otherwise)
+    let scanPercentComplete = null
+
+    if (cacheResponse.name && cacheResponse.name !== UNKNOWN_VALUE) {
+      // If we have an FSSDiscoveryScan result with a BodyCount then we can estimate
+      // percentage of the system that has been scanned
+      const FSSDiscoveryScan = await this.eliteLog._query({ event: 'FSSDiscoveryScan', SystemName: cacheResponse.name }, 1)
+      if (FSSDiscoveryScan?.[0]?.BodyCount) {
+        numberOfBodiesInSystem = FSSDiscoveryScan?.[0]?.BodyCount
+        scanPercentComplete = Math.floor((numberOfBodiesFound / numberOfBodiesInSystem) * 100)
+      }
+    }
 
     // If we don't know what system this is return what we have
     if (!cacheResponse.name || cacheResponse.name === UNKNOWN_VALUE) {
@@ -118,7 +198,9 @@ class System {
       const response = {
         name: systemName,
         unknownSystem: true,
-        isCurrentLocation
+        isCurrentLocation,
+        scanPercentComplete,
+        _cacheTimestamp: new Date().toISOString()
       }
 
       if (isCurrentLocation && currentLocation?.position && currentLocation?.address) {
@@ -136,14 +218,19 @@ class System {
         ...cacheResponse,
         ...currentLocation,
         distance: 0,
-        isCurrentLocation: true
+        isCurrentLocation: true,
+        scanPercentComplete,
+        _cacheTimestamp: new Date().toISOString()
       }
+
     } else {
       // Handle if this is not the system the player is currently in
       return {
         ...cacheResponse,
         distance: distance(cacheResponse?.position, currentLocation?.position),
-        isCurrentLocation: false
+        isCurrentLocation: false,
+        scanPercentComplete,
+        _cacheTimestamp: new Date().toISOString()
       }
     }
   }

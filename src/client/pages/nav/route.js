@@ -90,7 +90,7 @@ export default function NavListPage () {
                 {navRoute?.destination &&
                   <>
                     <h3 className='text-primary'>
-                      <i className='icarus-terminal-system-orbits' style={{ position: 'relative', top: '.25rem', marginRight: '.5rem' }} />
+                      <i className='icarus-terminal-route' style={{ position: 'relative', top: '.25rem', marginRight: '.5rem' }} />
                       Destination
                     </h3>
                     <h2 className='navigation-panel__route-heading text-info text-right'>
@@ -107,7 +107,7 @@ export default function NavListPage () {
         {navRoute?.route?.length > 0 &&
           <>
             <div className='scrollable' style={{ position: 'fixed', top: '20rem', bottom: '4.5rem', left: '5rem', right: '1rem' }}>
-              <table className='table--animated table--interactive'>
+              <table className='navigation-panel__route-plan table--animated table--interactive'>
                 <tbody className='fx-fade-in'>
                   {navRoute.route.map((route, i) => {
                     const icon = route?.isCurrentSystem === true ? 'icarus-terminal-location-filled' : 'icarus-terminal-star'
@@ -120,15 +120,31 @@ export default function NavListPage () {
                         onClick={() => router.push({ pathname: '/nav/map', query: { system: route?.system?.toLowerCase() } })}
                         style={{top: '-.5rem', position: 'relative'}}
                       >
-                        <td className='text-center' style={{ width: '3rem' }}>
+                        <td className='text-center' style={{ width: '3rem', paddingLeft: '.5rem', paddingRight: '.5rem' }}>
                           <span className={previouslyVistedSystem ? 'text-muted' : ''}>{i + 1}</span>
                         </td>
                         <td style={{ paddingLeft: '3.5rem' }}>
                           <div style={{ position: 'relative' }} className={previouslyVistedSystem ? 'text-muted' : ''}>
                             <i style={{ position: 'absolute', top: '.5rem', left: '-3rem', fontSize: '2rem' }} className={`icon ${icon} visible-medium`} />
                             <i style={{ position: 'absolute', top: '.4rem', left: '-3rem', fontSize: '2rem' }} className={`icon ${icon} hidden-medium`} />
-                            <span>{route.system} </span>
-                            <br />
+                            <span className='text-info'>{route.system}</span>
+                            <br/>
+                            {route.numberOfStars > 0 && <span className='text-no-wrap'>
+                              <span style={{marginRight: '1rem'}}>
+                                <i className='icon icarus-terminal-star' style={{ position: 'relative', top: '.35rem', fontSize: '1.5rem'}}/> {route.numberOfStars}
+                                <span className='hidden-small'> {route.numberOfStars === 1 ? 'Star' : 'Stars'}</span>
+                              </span>
+                              {route.numberOfPlanets > 0 && <>
+                                <i className='icon icarus-terminal-planet' style={{ position: 'relative', top: '.35rem', fontSize: '1.5rem'}}/> {route.numberOfPlanets}
+                                <span className='hidden-small'> {route.numberOfPlanets === 1 ? 'Planet' : 'Planets'}</span>
+                              </>}
+                            </span>}
+                            {route.numberOfStars < 1 && <>
+                              <span className='text-muted'>Unknown System</span>
+                            </>}
+                          </div>
+                        </td>
+                        <td className='text-no-wrap hidden-small hidden-medium'>
                             <span className='text-muted'>
                               {route.starClass.match(/^[DNH]/)
                                 ? route.starClass.match(/^D/)
@@ -138,23 +154,28 @@ export default function NavListPage () {
                                       : 'Black Hole'
                                 : `${route.starClass} Class`
                               }
-                              {route.starClass.match(/^[OBAFGKM]/) ? ', Main Sequence' : ''}
+                              {route.starClass.match(/^[OBAFGKM]/) ? <><br/>Main Sequence</> : ''}
                             </span>
-                          </div>
                         </td>
-                        <td className='hidden-small text-right text-no-wrap' style={{ width: '1rem' }}>
-                          <div className={previouslyVistedSystem ? 'text-muted' : ''}>
+                        <td className='text-right' style={{ width: '1rem', paddingLeft: '.5rem', paddingRight: '.5rem' }}>
+                          <span className={previouslyVistedSystem ? 'text-info text-muted' : 'text-info'}>
+                            {route?.isExplored === false && <>
+                              <i className='icarus-terminal-scan' style={{ position: 'relative', fontSize: '2rem', top: '.25rem', marginRight: '.5rem' }}/>
+                              <br className='visible-small'/>
+                            </>}
+                          </span>
+                          <span className={previouslyVistedSystem ? 'text-muted' : ''}>
                             {route.starClass.match(/^[OBAFGKM]/)
                               ? <i className='icarus-terminal-fuel' style={{ position: 'relative', fontSize: '2rem', top: '.25rem', marginRight: '.5rem' }} />
                               : route.starClass.match(/^[DNH]/) 
                                 ? <i className='text-danger icarus-terminal-warning' style={{ position: 'relative', fontSize: '2rem', top: '.25rem', marginRight: '.5rem' }} />
                                 : ''}
-                            </div>
+                            </span>
                         </td>
                         <td className='text-right' style={{ width: '1rem' }}>
                           <span className={previouslyVistedSystem ? 'text-muted' : ''}>
                             {route?.isCurrentSystem === false && <span className=' text-no-wrap text-no-transform'>{route.distance.toLocaleString(undefined, { maximumFractionDigits: 2 })} Ly</span>}
-                            {route?.isCurrentSystem === true && <span className='text-muted'>Current Location</span>}
+                            {route?.isCurrentSystem === true && <span className='text-muted'>Current System</span>}
                           </span>
                         </td>
                         <td className='text-center' style={{ width: '1rem' }}>
@@ -167,7 +188,7 @@ export default function NavListPage () {
               </table>
             </div>
           </>}
-          <div className='text-primary text-uppercase text-center' style={{height: '2.75rem', fontSize: '1.5rem', position: 'fixed', bottom: '1rem', left: '5rem', right: '1rem', marginBottom: '.5rem' }}>
+          <div className='text-primary text-uppercase text-center' style={{height: '2F.75rem', fontSize: '1.5rem', position: 'fixed', bottom: '.8rem', left: '5rem', right: '1rem', marginBottom: '.5rem' }}>
             <hr className='small' style={{ marginTop: 0, marginBottom: '1rem' }} />
             {navRoute?.route?.length > 0 && navRoute?.jumpsToDestination > 0 &&
               <>

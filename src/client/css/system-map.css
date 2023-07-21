@@ -176,20 +176,31 @@ on slow devices (e.g. Amazon Fire) to be the default */
 
 .system-map__system-position {
   position: absolute;
-  top: 4.25rem;
+  top: 4rem;
   right: 1.5rem;
   text-align: right;
   font-size: 1rem;
 }
 
-.system-map__system-telemetry {
+.system-map__system-telemetry--progress,
+.system-map__system-telemetry--text {
   position: absolute;
-  bottom: .5rem;
+  bottom: -.25rem;
   right: 1.5rem;
   font-size: 1rem;
-  text-align: right;
+  text-align: left;
+  padding: .1rem;
+  border-radius: .2rem;
+  z-index: 100;
+  width: 8.5rem;
+  padding: .5rem;
+  overflow: hidden;
+  background: rgba(0,0,0,.75);
 }
 
+.system-map__system-telemetry--text {
+  right: 1.25rem;
+}
 
 .system-map__planetary-system {
   position: relative;

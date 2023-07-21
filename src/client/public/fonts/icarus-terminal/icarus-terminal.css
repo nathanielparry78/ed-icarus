@@ -1,11 +1,11 @@
 @font-face {
   font-family: "icarus-terminal";
-  src: url('icarus-terminal.eot?t=1661060213060'); /* IE9*/
-  src: url('icarus-terminal.eot?t=1661060213060#iefix') format('embedded-opentype'), /* IE6-IE8 */
-  url("icarus-terminal.woff2?t=1661060213060") format("woff2"),
-  url("icarus-terminal.woff?t=1661060213060") format("woff"),
-  url('icarus-terminal.ttf?t=1661060213060') format('truetype'), /* chrome, firefox, opera, Safari, Android, iOS 4.2+*/
-  url('icarus-terminal.svg?t=1661060213060#icarus-terminal') format('svg'); /* iOS 4.1- */
+  src: url('icarus-terminal.eot?t=1676158455640'); /* IE9*/
+  src: url('icarus-terminal.eot?t=1676158455640#iefix') format('embedded-opentype'), /* IE6-IE8 */
+  url("icarus-terminal.woff2?t=1676158455640") format("woff2"),
+  url("icarus-terminal.woff?t=1676158455640") format("woff"),
+  url('icarus-terminal.ttf?t=1676158455640') format('truetype'), /* chrome, firefox, opera, Safari, Android, iOS 4.2+*/
+  url('icarus-terminal.svg?t=1676158455640#icarus-terminal') format('svg'); /* iOS 4.1- */
 }
 
 [class^="icarus-terminal-"], [class*=" icarus-terminal-"] {
@@ -97,5 +97,6 @@
 .icarus-terminal-table-inspector:before { content: "\ea4e"; }
 .icarus-terminal-table-rows:before { content: "\ea4f"; }
 .icarus-terminal-target:before { content: "\ea4f"; }
+.icarus-terminal-triangle-up:before { content: "\ea57"; }
 .icarus-terminal-warning:before { content: "\ea50"; }
 .icarus-terminal-wrench:before { content: "\ea51"; }

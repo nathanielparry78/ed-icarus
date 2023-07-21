@@ -25,18 +25,18 @@ You can run ICARUS Terminal in a native window, on multiple windows/displays, as
 
 ## Screenshots
 
-<img alt="System Map" src="https://user-images.githubusercontent.com/595695/192074952-3bfa22b1-2dd1-45f6-893e-0f56ae5b87c7.png" height="auto" width="98.5%"/>
+<img alt="System Map" src="https://user-images.githubusercontent.com/595695/197432007-13726aea-9413-4fcf-88c6-9abc34f2d26c.png" height="auto" width="98.5%"/>
 
-<img alt="System List" src="https://user-images.githubusercontent.com/595695/192074950-dc938468-9801-4f46-8fbb-c88fd8194e85.png" height="auto" width="49%"/> <img alt="Ship Status" src="https://user-images.githubusercontent.com/595695/192074957-d3f646bf-e5b2-4227-998b-28bc264bf971.png" height="auto" width="49%"/>
-<img alt="Blueprint" src="https://user-images.githubusercontent.com/595695/192074945-b47edcbb-6aab-444d-827c-6b6255e8f932.png" height="auto" width="49%"/> <img alt="Navigation Route" src="https://user-images.githubusercontent.com/595695/192074955-be1010c6-2ad8-43ef-9b64-2237f3902222.png" height="auto" width="49%"/>
+<img alt="System List" src="https://user-images.githubusercontent.com/595695/215351117-50282d37-f42f-4eb9-975b-e70d29202cdb.png" height="auto" width="49%"/> <img alt="Ship Status" src="https://user-images.githubusercontent.com/595695/215350062-0f7ad9e4-905c-43ae-b3cf-1dc7944ab744.png" height="auto" width="49%"/>
+<img alt="Blueprint" src="https://user-images.githubusercontent.com/595695/192074945-b47edcbb-6aab-444d-827c-6b6255e8f932.png" height="auto" width="49%"/> <img alt="Navigation Route" src="https://user-images.githubusercontent.com/595695/215350464-88e75eb1-77d8-408c-a0ec-12fd6911e866.png" height="auto" width="49%"/>
 
 ## Requirements
 
-The self-contained installer is around 20 MB and has no dependancies. If you are running an older but supported release of Windows, any missing run time dependancies will be automatically and transparently installed by the bundled Microsft installer.
+The self-contained installer is around 20 MB and has no dependancies. If you are running an older but supported release of Windows, any missing dependancies will be automatically installed.
 
-* Windows 10 or newer is required.
+* Windows 10 or newer required.
 * No dependancies are required to install the application.
-* No manual configuration or setup is required to use the application.
+* No manual configuration or setup is required, it will automatically find your game data.
 * No additional diskspace is required to store game data. Recent game data is loaded in to memory when launched and streamed in real time when the game is active, it is not persisted or cached to disk.
 
 ### Notes
@@ -51,9 +51,27 @@ The web interface relies on advanced browser functionality for rendering and wor
 
 ## Developer Documentation
  
-Code contributions, pull requests and bug reports are not currently being accepted for this repository. See [CONTRIB.md](CONTRIB.md) for more information.
+Code contributions, pull requests and bug reports are not currently being accepted for this repository. See [CONTRIB.md](CONTRIB.md) for more information. For developer documentation see [BUILD.md](BUILD.md).
 
-For developer documentation, including one-step build instructions for Windows/Mac/Linux, see [BUILD.md](BUILD.md).
+### Developer Quickstart
+
+If you are running on Linux and/or looking for quick instructions on how to run from source, if you have [Node.js](https://nodejs.org/en/) this is what you need to do to download and install  ICARUS Terminal:
+
+    git clone git@github.com:iaincollins/icarus.git
+    cd icarus
+    npm install
+    
+Next, run `cp .env-example .env` to create an `.env` file and edit it to change the `LOG_DIR` option to point to the location of your Elite Dangerous log files:
+
+    # LOG_DIR can be used to tell the Service where to look for game logs
+    # This option can be used in development and at runtime
+    LOG_DIR=path/to/logs
+
+With that done, anytime you want to start ICARUS Terminal, all you need to do is run:
+
+    npm start
+
+This will run in debug mode which is not quite the same as a production build (it's not as optimised) but should work just fine.
 
 ## Legal
 
@@ -87,12 +105,21 @@ ICARUS Terminal uses imagery from/inspired by Elite Dangerous, which is copyrigh
 
 Thank you to all those who have created and supported libraries on which this software depends and to Frontier Developments plc for supporting third party tools.
 
-## Donations
+## Support
 
-People have asked if I take donations for the project. I don't take donations, but I do appreciate folks asking!
+People have asked if I take donations for the project - I don't donations, but 
+I do appreciate the offer.
 
-If you want to support development of ICARUS Terminal, you can always pay a vist to my carrier the [Ardent Pioneer (V9G-G7Z)](https://inara.cz/elite/station/490914/)!
+If you want to support development of ICARUS Terminal, the best way is to visit 
+the [Ardent Pioneer (V9G-G7Z)](https://inara.cz/elite/station/490914/).
 
-You can use Inara to [find out which system the Ardent Pioneer is currently in](https://inara.cz/elite/station/490914/). Before you visit you might want to [check out what commodities are currently being traded](https://inara.cz/elite/station-market/490914/). While you are there you can chat to the bartender to see if there is anything they need. You can also sell exploration data, biological samples and refuel/rearm/repair your ship.
+Selling Tritium to the carrier directly supports development as it means I can 
+spend more time adding features to ICARUS Terminal and travelling the galaxy to 
+test them out!
 
-All buy orders are at least 10% above galatic average prices so you should be able to make a small profit. Trades, especially selling Tritium, directly supports development as it means I can spend more time adding travelling the galaxy and testing out functionality in ICARUS Terminal!
+You can use Inara to [find out which system the Ardent Pioneer is currently in](https://inara.cz/elite/station/490914/) and see if it's anywhere near you.
+
+Before you visit you might want to [check out what commodities are currently 
+being traded](https://inara.cz/elite/station-market/490914/). You might also 
+want to chat to the bartender to see what they are looking for!
+

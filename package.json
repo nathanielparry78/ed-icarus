@@ -1,6 +1,6 @@
 {
   "name": "icarus",
-  "version": "0.17.0",
+  "version": "0.21.0",
   "description": "ICARUS Terminal for Elite Dangerous",
   "scripts": {
     "build": "npm run build:client && npm run build:app && npm run build:service && npm run build:package",
@@ -21,8 +21,7 @@
     "lint": "npm run lint:go && npm run lint:javascript",
     "lint:go": "go fmt src/app/main.go",
     "lint:javascript": "npx standard --fix",
-    "compress-images": "npx imagemin src/client/public/images/** --out-dir src/client/public/images/",
-    "screenshots": "node scripts/screenshots.js"
+    "compress-images": "npx imagemin src/client/public/images/** --out-dir src/client/public/images/"
   },
   "keywords": [],
   "author": "",

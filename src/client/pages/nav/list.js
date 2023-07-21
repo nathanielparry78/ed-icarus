@@ -72,11 +72,18 @@ export default function NavListPage () {
       setSystemObject(null) // Clear selected object
       setSystem(newSystem)
     }
-    if (['FSSDiscoveryScan', 'FSSAllBodiesFound', 'Scan'].includes(log.event)) {
+    if (['FSSDiscoveryScan', 'FSSAllBodiesFound', 'SAASignalsFound', 'FSSBodySignals', 'Scan'].includes(log.event)) {
       const newSystem = await sendEvent('getSystem', { name: system?.name, useCache: false })
-      if (newSystem) setSystem(newSystem)
+      // Update system object so NavigationInspectorPanel is also updated
+      if (newSystem) {
+        if (systemObject?.name) {
+          const newSystemObject = newSystem.objectsInSystem.filter(child => child.name.toLowerCase() === systemObject.name?.toLowerCase())[0]
+          setSystemObject(newSystemObject)
+        }
+        setSystem(newSystem)
+      }
     }
-  }), [system])
+  }), [system, systemObject])
 
   useEffect(() => {
     if (!router.isReady) return
@@ -124,10 +131,13 @@ export default function NavListPage () {
               <i className='icon icarus-terminal-planet-ammonia-world' /> Ammonia World
             </p>
             <p>
-              <i className='icon icarus-terminal-planet-high-metal-content' /> High metal content
+              <i className='icon icarus-terminal-planet-high-metal-content' /> High metal content / Metal rich
             </p>
             <p>
               <i className='icon icarus-terminal-planet-gas-giant' /> Gas Giant
+            </p>
+            <p>
+              <i className='icon icarus-terminal-plant' /> Biological signal
             </p>
             <p>
               <i className='icon icarus-terminal-planet-water-based-life' /> Water based life
@@ -136,7 +146,10 @@ export default function NavListPage () {
               <i className='icon icarus-terminal-planet-ammonia-based-life' /> Ammonia based life
             </p>
             <p>
-              <i className='icon icarus-terminal-planet-ringed' /> Ringed
+              <i className='icon icarus-terminal-planet-ringed' /> Ringed body
+            </p>
+            <p>
+              <i className='text-success icon icarus-terminal-credits' /> High scan value
             </p>
           </div>
         </div>
