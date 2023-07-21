@@ -18,6 +18,11 @@ const NAV_BUTTONS = [
     path: '/ship'
   },
   {
+    name: 'Combat',
+    abbr: 'Combat',
+    path: '/combat'
+  },
+  {
     name: 'Engineering',
     abbr: 'Eng',
     path: '/eng'
@@ -149,8 +154,10 @@ export default function Header ({ connected, active }) {
         </button>
       </div>
       <hr />
+        {/* account for landscape mode */}
+        {/* check how `primaryNavigation` does */}
       <div id='primaryNavigation' className='button-group'>
-        {NAV_BUTTONS.filter(button => button).map((button, i) =>
+        {NAV_BUTTONS.filter(button => button).map(button =>
           <button
             key={button.name}
             data-primary-navigation={i+1}
@@ -165,6 +172,7 @@ export default function Header ({ connected, active }) {
           </button>
         )}
       </div>
+
       <hr className='bold' />
       <Settings visible={settingsVisible} toggleVisible={() => setSettingsVisible(!settingsVisible)} />
     </header>

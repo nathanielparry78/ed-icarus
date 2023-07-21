@@ -19,6 +19,7 @@ export default function SystemMapStar ({ star, setSystemObject }) {
   return (
     <div
       className='system-map__planetary-system'
+      style={{ width: `${star._children.length * 300}px` }}
       data-stellar-objects-horizontal={star._children.length}
       data-stellar-objects-vertical={star._maxObjectsInOrbit}
     >

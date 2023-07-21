@@ -5,10 +5,11 @@
 
 .system-map {
   margin-top: 4rem;
-  margin-bottom: 4rem;
+  margin-bottom: 12rem;
+  overflow: auto;
 }
 
-/* Happy with the effect but it negatively impacts rendering time too much 
+/* Happy with the effect but it negatively impacts rendering time too much
 on slow devices (e.g. Amazon Fire) to be the default */
 
 /*
@@ -223,7 +224,7 @@ on slow devices (e.g. Amazon Fire) to be the default */
   animation: svg-fade-in-animation 1s ease-in-out;
   animation-fill-mode: forwards;
   /* Wait until after other animations on page are done for best performance on slow devices */
-  animation-delay: 1s; 
+  animation-delay: 1s;
 }
 
 .system-map__planetary-system-star-icon svg {
@@ -232,7 +233,7 @@ on slow devices (e.g. Amazon Fire) to be the default */
   animation: fx-fade-in-animation 1s ease-in-out;
   animation-fill-mode: forwards;
   /* Wait until after other animations on page are done for best performance on slow devices */
-  animation-delay: .5s; 
+  animation-delay: .5s;
 }
 
 @keyframes svg-fade-in-animation {
@@ -264,7 +265,7 @@ on slow devices (e.g. Amazon Fire) to be the default */
 }
 
 @media only screen and (max-width: 799px) {
-  .system-map__planetary-system-star h2 { 
+  .system-map__planetary-system-star h2 {
     font-size: 1.75rem;
     line-height: 2rem;
   }
@@ -321,7 +322,7 @@ on slow devices (e.g. Amazon Fire) to be the default */
 /* .system-map__system-object[data-system-object-type="Planet"]:focus + .system-map__planet-ring {
   stroke: var(--color-icon-focus);
   stroke-width: 10rem;
-  transition: all .1s ease; 
+  transition: all .1s ease;
   opacity: 0.7;
 } */
 
@@ -448,7 +449,7 @@ on slow devices (e.g. Amazon Fire) to be the default */
   filter: contrast(0.2) sepia(100%) hue-rotate(300deg) saturate(1.4) brightness(.4)  contrast(2) drop-shadow(0 0 15rem rgb(200,20,20));
 }
 
-/* 
+/*
 .system-map__system-object:focus .system-map__planet-surface {
   fill: url(#svg-pattern__planet-surface-animated);
 }

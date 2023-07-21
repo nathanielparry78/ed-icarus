@@ -60,8 +60,12 @@ function connect (socketState, setSocketState) {
         }))
       }, 500)
 
+      if (message.event === "ShipTargeted") {
+        console.log(message)
+        sendEvent(`Ship targeted`, message)
+      }
       // Trigger notifications for key actions
-      // TODO Refactor out into a seperate handler
+      // TODO Refactor out into a separate handler
       try { // Don't crash if fails because properties are missing
         if (socketOptions.notifications === true && name === 'newLogEntry') {
           if (message.event === 'StartJump' && message.StarSystem) notification(`Jumping to ${message.StarSystem}`)
@@ -163,7 +167,7 @@ function useSocket () { return useContext(SocketContext) }
 
 function sendEvent (name, message = null) {
   return new Promise((resolve, reject) => {
-    const requestId = generateUuid()
+    const requestId = generateUuid();
     callbackHandlers[requestId] = (event, setSocketState) => {
       const { message } = JSON.parse(event.data)
       delete callbackHandlers[requestId]

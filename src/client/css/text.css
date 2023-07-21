@@ -116,6 +116,7 @@
 
 .text-formatted-object .text-formatted-object-value {
   color: var(--color-info) !important;
+  text-transform: capitalize;
 }
 
 .text-no-shadow {
